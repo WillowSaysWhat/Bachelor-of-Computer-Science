@@ -1,0 +1,72 @@
+A local flooring company provides Wood, Tile & Carpet flooring. They charge as
+follows.
+• £5 per m2 for Carpet + £50 per 5 m2 for installation
+• £10 per m2 for Wood + £75 per 5 m2 for installation
+• £15 per m2 for Tiled + £100 per 5 m2 for installation
+The company wants a simple quote calculating application where they can input room
+dimensions and the software can provide a quote for each material. The application
+should be able to:
+• Add a new Customer with their name, phone number & address
+• List customers names with their most recent quoted price (if any)
+• Update the dimensions of the floor required
+• Calculate customers total cost to have the floor fitted in each different type
+• Show Customer details
+• Show customers historic quotes
+• Show a list of all Customers in sorted by the most expensive quote to the
+cheapest
+• Save the customer details to file
+• Read the customer details from a file
+• Exit Program.
+Data can be stored in a file called “floorscustomer.txt”
+
+######### remove all dimensions variables and just make .set__ 
+######### find all if 'y' or 'Y' and change to toupper(variableNmae) = 'Y'
+######### but a catch  if there is no customers########
+######## Quote History is misaligned ########## 
+
+1 
+Huw Williams
+07711868257 
+2 
+The parade 
+Church Village 
+CF38 1BU 
+12.03 
+5.89
+Wood
+58.09
+69.09
+78.34 
+55.95 
+70.86
+2
+Dave Williams
+07711868257
+7 
+The Hill 
+Treforest 
+CF421 1GD 
+12.03 
+5.89
+Carpet
+58.09 
+69.09 
+78.34 
+55.95 
+80.86
+3
+Huw Morgan
+07711868257 
+18
+First St
+Cardiff 
+CF01 4RY
+13.03 
+9.89
+Tile
+80.86
+48.06
+79.03
+88.32
+95.95 
+
