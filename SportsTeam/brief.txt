@@ -1,0 +1,51 @@
+ Team.io
+ 
+ - player availaability  for a match and produce a simple team sheet for th coach
+ - generate a team from the current available players
+ - should be able to manage different teams (age groups)
+ - history of matches and stats generated
+ - the coach will input the match, input player availablity, the system will then pick the best players for the match.
+ - coach should be able to change the players picked and create his own team.
+ - after each match the coach will give them a rating out of 10 and this will adjust their average rating
+
+ Teams 
+ Team name
+ Recent matches
+ Head coach
+
+ Matches
+ Opponent
+ Players
+ Assistant coach (for the match)
+ Physio
+ Team Captain
+ Our team score
+ Result (win, Loss, Draw)
+
+ Players
+ Name 
+ Position
+ Average Rating
+ Current Availability
+ 
+ Head Coach 
+ Name 
+ email
+ Phone number
+
+ Assistant Coach
+  Name 
+ email
+ Phone number
+ Coaching expertise
+
+ Lane Analysis 
+  Name 
+ email
+ Phone number
+ expertise
+
+
+
+To do
+- organise player data

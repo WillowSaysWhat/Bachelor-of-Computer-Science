@@ -1,0 +1,2 @@
+﻿Example.obj : error LNK2005: main already defined in 30051129.obj
+C:\Users\will0\Desktop\SportsTeam\x64\Debug\SportsTeam.exe : fatal error LNK1169: one or more multiply defined symbols found
