@@ -5,10 +5,11 @@ using namespace std;
 
 class Squad
 {
-private:
-	string teamName = "Australis", headCoach = "Tim The Tool", Analyst = "Jim Bob",
-	SafeLaneSupp, SafeLaneCarry, Jungler, offLane, midLane;
-		
+protected:
+	string teamName = "Australis", headCoach = "Tim The Tool", Analyst = "Jim Bob";
+	vector<Member> teamMembers;
+	vector<string> positions {"Tank", "ADC", "Jungler", "Offlane", "Support"};
+
 public:
 string getName()
 {
@@ -24,9 +25,9 @@ string getAnalyst()
 }
 	
 };
-class Match : private Squad
+class Match : Squad
 {
-private:
+protected:
 	string friendlyTeam, Opponent, date;
 public:
 	Match (string _friendlyTeam, string _Opponent, string _date) 
@@ -48,9 +49,9 @@ public:
 	}
 	
 };
-class Member: private Squad
+class Member: Squad
 {
-private:
+protected:
 	string name, memberPosition, currentAvailability, expertise;
 public:
 	Member (string _name, string _memberPosition, string _currentAvailability, string _expertise) 
@@ -58,9 +59,9 @@ public:
 	
 	
 };
-class Player : private Member
+class Player : Member
 {
-private:
+protected:
 	string team;
 	float rating, averageRating;
 	vector<float> recentRatings;
@@ -85,9 +86,9 @@ void setTeam(string _team)
 	this->team = _team;
 }
 };
-class Support : private Member
+class Support : Member
 {
-private:
+protected:
 	string email;
 	int phone;
 public:
@@ -124,7 +125,7 @@ void inputOpponent()
 }
 void incorrectInput()
 {
-	cout << "Error, Does Not Exit. Try Again? (Y/N): ";
+	cout << "Error, Does Not Exist. Try Again? (Y/N): ";
 }
 void inputDate()
 {
