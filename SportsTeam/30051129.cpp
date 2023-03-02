@@ -1,13 +1,70 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
+
+class Member
+{
+protected:
+	string name, memberPosition, currentAvailability;
+public:
+	Member (string _name, string _position, string _availability) 
+	: name(_name), memberPosition(_position), currentAvailability(_availability){} 
+		
+};
+
+class Player : public Member
+{
+protected:
+	string team;
+	float rating, averageRating;
+	vector<float> recentRatings;
+public:
+	Player(string _name, string _position, string _availability, float rating1, float rating2, float rating3, float rating4, float rating5)
+	:Member (_name, _position, _availability)
+	{
+		recentRatings.push_back(rating1);
+		recentRatings.push_back(rating2);
+		recentRatings.push_back(rating3);
+		recentRatings.push_back(rating4);
+		recentRatings.push_back(rating5);
+	}
+void setRecentRatings(float _rating)
+{
+	recentRatings.push_back(_rating);
+}
+void setAverageRating()
+{
+	float numOfRatings = recentRatings.size();
+	for(auto &rating : recentRatings)
+	{
+		averageRating += rating;
+	}
+	averageRating = averageRating / numOfRatings;
+}
+void setTeam(string _team)
+{
+	this->team = _team;
+}
+
+};
+
+class Support : public Member
+{
+protected:
+	string email;
+	int phone;
+public:
+	Support(string name, string position, string availability, string email, int phone)
+	: Member (name, position, availability), email(email), phone(phone){}	
+};
 class Squad
 {
 protected:
-	string teamName = "Australis", headCoach = "Tim The Tool", Analyst = "Jim Bob";
-	vector<Member> teamMembers;
+	string teamName = "Australis", headCoach = "Tim The Tool", Analyst = "Jim Bob", Tank, ADC, Jungler, Offlane, Support;
+	
 	vector<string> positions {"Tank", "ADC", "Jungler", "Offlane", "Support"};
 
 public:
@@ -49,53 +106,9 @@ public:
 	}
 	
 };
-class Member: Squad
-{
-protected:
-	string name, memberPosition, currentAvailability, expertise;
-public:
-	Member (string _name, string _memberPosition, string _currentAvailability, string _expertise) 
-	: name(_name), memberPosition(_memberPosition), currentAvailability(_currentAvailability), expertise(_expertise){} 
-	
-	
-};
-class Player : Member
-{
-protected:
-	string team;
-	float rating, averageRating;
-	vector<float> recentRatings;
-public:
-	Player(string _name, string _memberPosition, string _currentAvailability, string _expertise, float _rating)
-	:Member (_name,_memberPosition, _currentAvailability, _expertise), rating(_rating){}
-void setRecentRatings(float _rating)
-{
-	recentRatings.push_back(_rating);
-}
-void setAverageRating()
-{
-	float numOfRatings = recentRatings.size();
-	for( auto &rating : recentRatings)
-	{
-		averageRating += rating;
-	}
-	averageRating = averageRating / numOfRatings;
-}
-void setTeam(string _team)
-{
-	this->team = _team;
-}
-};
-class Support : Member
-{
-protected:
-	string email;
-	int phone;
-public:
-	Support(string _name, string _memberPosition, string _currentAvailability, string _expertise, string _email, int _phone)
-	: Member (_name,_memberPosition, _currentAvailability, _expertise), email(_email), phone(_phone){}
-	
-};
+
+
+// class to display menus
 class Menu
 {
 public:
@@ -113,6 +126,16 @@ void mainMenu()
 		cout << "     Make A Selection: ";
 
 
+}
+void PlayerStatsMenu()
+{
+	cout << "1. View Players By Team."<< endl;
+	cout << "2. View Players By Stats." << endl;
+	cout << "3. View Players By Position" << endl;
+	cout << "4. View Players By Expertise" << endl;
+	cout << "5. Exit to Main Menu." << endl;
+	cout << endl;
+	cout << "PLease Make A Selection: ";
 }
 void inputFriendlySquad()
 {
@@ -133,7 +156,8 @@ void inputDate()
 }
 
 };
-class Display
+// class to display output
+class Display : public Menu
 {
 public:
 void banner()
@@ -154,44 +178,77 @@ void displayMatch(vector<Match> _m, int _i, string _coach, string support)
 	cout << "Team: " << _m[_i].getFriendlyTeam() << " \tOpponent: " << _m[_i].getOpponent() << endl;
 	cout << "Head Coach: " << _coach << "Lane Analyst: " <<  endl;
 	cout << "Date: " << _m[_i].getDate() << endl;
+	cout << "Position: " << support;
 
 	system("pause");
+}
+void displayPlayerStats(vector<Member> members)
+{
+	int UserInput;
+	
+	do
+	{
+		if((UserInput < 0) && (UserInput > 5)) {continue;}
+		
+		banner(); // above in Display class
+		inputFriendlySquad(); // in Menu class
+		cin >> UserInput;
+	
+		switch (UserInput)
+		{
+		case 1:
+			// by team
+			break;
+		case 2:
+			// by stats
+			break;
+		case 3:
+			// by position
+		case 4:
+			// by expertise
+		default:
+			break;
+		}
+
+	} while (UserInput == 5);
+	
+	
 }
 
 };
 
 // static functions for each menu
 
-void newMatch(Display d, Menu m, vector<Squad> squad, vector<Match> match)
+void newMatch(Display display,vector<Squad> squad, vector<Match> match)
 {
 	string friendly, opponent, date;
 	char YesOrNo;
 	bool leaveMenu = false;
 	do
 	{
-		d.banner();
-		m.inputFriendlySquad();
+		display.banner();
+		display.inputFriendlySquad();
 		cin >> friendly;
 		for (size_t i = 0; i < squad.size(); i++)		
 		{
 			if (squad[i].getName() == friendly)
 			{
-				m.inputOpponent();
+				display.inputOpponent();
 				cin >> opponent;
 
-				m.inputDate();
+				display.inputDate();
 				cin >> date;
 
 
 				match.push_back(Match(friendly,opponent, date));
-				d.displayMatch(match, i, squad[i].getHeadCoach(), squad[i].getAnalyst());
+				display.displayMatch(match, i, squad[i].getHeadCoach(), squad[i].getAnalyst());
 				break;
 			}
 			else
 			{
 				do
 				{
-					m.incorrectInput();
+					display.incorrectInput();
 					cin >> YesOrNo;
 					if(toupper('N'))
 					{
@@ -210,29 +267,97 @@ void newMatch(Display d, Menu m, vector<Squad> squad, vector<Match> match)
 }
 
 
+
+
+
+void loadMembers(vector<Member*> &members) 
+	{
+		string playerCSV = "players.csv", coachCSV = "coaches.csv",
+			   name, position, available, expertise, 
+		   	   team, currentRating, averageRating, rating1,
+		       rating2, rating3, rating4, rating5; // strings for each input
+	
+		ifstream fileInput;
+		fileInput.open(playerCSV);
+
+		if(fileInput.is_open())
+		{
+	
+			while (fileInput.good()) // pulls data from file using CSV
+    	    {
+    	        getline(fileInput, name, ',');
+        	    getline(fileInput, position, ',');
+        	    getline(fileInput, available, ',');
+        	    getline(fileInput, expertise, ',');
+        	    getline(fileInput, team, ',');
+        	    getline(fileInput, currentRating, ',');
+        	    getline(fileInput, averageRating, ',');
+        	    getline(fileInput, rating1, ',');
+        	    getline(fileInput, rating2, ',');
+        	    getline(fileInput, rating3, ',');
+        	    getline(fileInput, rating4, ',');
+        	    getline(fileInput, rating5, '\n');
+
+            	if(fileInput.eof()) break;
+
+				if (position == "Player")
+				{
+					int lastMember = members.size();
+					members.push_back(new Player(name, position, available, stof(rating1), stof(rating2), 
+					stof(rating3), stof(rating4), stof(rating5)));
+					
+					
+				}
+				else if (position == "Support")
+				{
+					// members.push_back(new Support())
+				}	
+                 
+				
+	
+	
+        	}
+		
+
+		
+		}
+		else
+		{
+			cout << "The database does not exist" << endl;
+			system("pause");
+		}
+		fileInput.close();
+
+	
+	}
+
+
 int main()
 {
 	
-	Menu menu;
-	Display display;
-	Squad Australis;
 	
-	vector<Member> playersAndStaff;
-	vector<Squad> squad = {Australis}; // fix this as i have hard coded 'Australis' in the class
+	
+	Display display;
+
+	vector<Squad> Squads;
 	vector<Match> Matches;
+	vector<Member*> Players;
+
+	loadMembers(Players);
+	system("pause");
 
 int UserInput;	
 do
 {
 	display.banner();
-	menu.mainMenu();
+	display.mainMenu();
 	cin >> UserInput;
 
 	switch (UserInput)
 	{
 	case 1:
 		/* make a new match */
-		newMatch(display, menu, squad, Matches);
+		newMatch(display,Squads, Matches);
 		break;
 	case 2:
 		// generate a squad
@@ -256,8 +381,6 @@ do
 
 } while (UserInput != 6);
 	
-
-
 
 
 
