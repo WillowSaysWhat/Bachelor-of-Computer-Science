@@ -1,6 +1,6 @@
  Team.io
  
- - player availaability  for a match and produce a simple team sheet for th coach
+ - player availability  for a match and produce a simple team sheet for the coach
  - generate a team from the current available players
  - should be able to manage different teams (age groups)
  - history of matches and stats generated
@@ -51,25 +51,92 @@ To do
 - organise player data
 
 
-while (!fileInput.eof())
-        {
-            getline(fileInput, name, ',');
-            getline(fileInput, position, ',');
-            getline(fileInput, available, ',');
-            getline(fileInput, expertise, ',');
-            getline(fileInput, team, ',');
-            getline(fileInput, currentRating, ',');
-            getline(fileInput, averageRating, ',');
-            getline(fileInput, rating1, ',');
-            getline(fileInput, rating2, ',');
-            getline(fileInput, rating3, ',');
-            getline(fileInput, rating4, ',');
-            getline(fileInput, rating5, '\n');
+do
+	{
+		display.banner();
+		display.NewPlayerAndStaffMenu();
+		cin >> UserInput;
+		switch (UserInput)
+		{
+		case 1:
+			do
+			{
+				display.inputNewPLayer();
+				cout << "(First Name): ";
+				cin >> fname;
+				cout << endl;
+				display.inputNewPLayer();
+				cout << "(second Name): ";
+				cin >> sname;
+				
+				do
+				{
+					cout << endl;
+					cout << "Select 1 or 2" << endl;
+					cout << endl;
+					display.setAvailability();
+					cin >> UserInput;
+
+					switch (UserInput)
+					{
+					case 1:
+						availability = "Available";
+						break;
+					case 2:
+						availability = "Unavailable";
+						break;
+					default:
+						break;
+					}
+				} while (UserInput != 1 || UserInput != 2);
+				
+				do
+				{
+					display.setPlayerExpertise();
+					cin>> UserInput;
+					switch (UserInput)
+					{
+					case 1:
+						expertise = "Tank";
+						break;
+					case 2:
+						expertise = "ADC";
+						break;
+					case 3:
+						expertise = "Jungler";
+						break;
+					case 4:
+						expertise = "Offlane";
+						break;
+					case 5:
+						expertise = "Support";
+						break;
+					
+					default:
+						break;
+					}
+				} while (UserInput != 1 || UserInput != 2 || UserInput != 3 || UserInput != 4 || UserInput != 5);
+				
+				
+
+			} while (UserInput !=0);
+			
+			
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+
+		default:
+			break;
+		}
+	} while (UserInput != 0);
+
+
+
+
 
             
-            cout << " " << name << " " << position << " " << available << " " << expertise << " " <<team << " " 
-                << currentRating << " " << averageRating<< " " << rating1 << " " << rating2 << " " << rating3 << " " << rating4
-                << " " << rating5 << endl;
 
-                
-        }
+     
