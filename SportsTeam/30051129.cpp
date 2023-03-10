@@ -406,23 +406,15 @@ void findACoachAnalyst(vector<Support> &squadSupport, string positionName, strin
 	}
 	if(noStaff) {cout << "\nThere are NO STAFF AVAILABLE to play in that position!!" << endl;} 	
 }
-void FindMatch(vector<Match> &matches, string &friendly, string &opponent, size_t &index)
-{
-	for (index = 0; index < matches.size() - 1; index++)
-	{	// finds index only (is passed by reference) 
-		if((matches[index].getOpponent() == opponent) && (matches[index].getSquadName() == friendly)) {continue;}
-	}
-	
-}
+
 void FindPlayer(vector<Player> &players, size_t &index, string &name) 
 {
 	for (index = 0; index < players.size() - 1; index++)
 	{	// finds index only (is passed by reference) 
 		if(players[index].getName() == name) 
 		{
-			break;
+			break;// breaks when it finds the correct name - thisPlayer in postGame() takes value
 		}
-		
 		else {name = "None";}
 
 	}
@@ -555,13 +547,16 @@ void savePlayers(vector<Player> &players)
 
 	if(fileOutput.is_open())
 	{
+		
 		for (auto &p : players)
 		{
 			
-			fileOutput << p.saveFirstNameToFile() << ',' << p.saveSecNameToFile() << ',' << p.getCurrentAvail() << ',' << p.getExpertise() << ',' << p.getRecentRating(4) << ',' << p.getAverageRating() 
-			<< ',' << p.getRecentRating(4) << ',' << p.getRecentRating(3) << ',' << p.getRecentRating(2) << ',' << p.getRecentRating(1) << ',' << p.getRecentRating(0)<< '\n';
+			fileOutput << fixed << setprecision(1) << p.saveFirstNameToFile() << ',' << p.saveSecNameToFile() << ',' << p.getCurrentAvail() << ',' << p.getExpertise() << ',' << p.getRecentRating(4) << ',' << p.getAverageRating() 
+			<< ',' << p.getRecentRating(4) << ',' << p.getRecentRating(3) << ',' << p.getRecentRating(2) << ',' << p.getRecentRating(1) << ',' << p.getRecentRating(0) << endl;
 		}
+		
 	}
+
 
 }
 void saveStaff(vector<Support> &support)
@@ -575,7 +570,7 @@ void saveStaff(vector<Support> &support)
 	{
 		for(auto &s : support)
 		{
-			fileOutput << s.saveFirstNameToFile() << ',' << s.saveSecNameToFile() << ',' << s.getCurrentAvail() << ',' << s.getExpertise() << ',' << s.getPhone() << '\n';
+			fileOutput << s.saveFirstNameToFile() << ',' << s.saveSecNameToFile() << ',' << s.getCurrentAvail() << ',' << s.getExpertise() << ',' << s.getPhone() << endl;
 		}
 	}
 }
@@ -592,6 +587,7 @@ void saveMatches(vector<Match> &matches)
 			fileOutput << m.getSquadName() << ',' << m.getOpponent() << ','<< m.getHeadCoach() << ',' << m.getAnalyst() << ',' << m.getTank() <<','<< m.getADC() << ',' << m.getJungler() <<',' << m.getOfflane() << ','
 			<< m.getSupport() << '\n'; 
 		}
+		 
 		//(team, opponent, coach, analyst, tank, ADC, jungler, offlane, support)
 	}
 }
@@ -599,8 +595,6 @@ void saveMatches(vector<Match> &matches)
 
 
 // static functions 
-
-
 	
 void makeNewPlayersAndStaff(vector<Player> &players, vector<Support> &squadSupport, Display &display, Logic logic)
 {
@@ -1025,7 +1019,8 @@ void newMatch(Logic &logic, Display display, vector<Player> &players, vector<Sup
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	}
 
-	
+	// saves changes to file
+	logic.saveMatches(matches);
 	} while (UserInputMatchMenu != 6);
 	
 }
@@ -1035,7 +1030,7 @@ void postMatch(vector<Player> &players,vector<Match> &matches, Display &display,
 	int UserInput, winOrLoss;
 	float newRating;
 	string friendly, opponent, outcome, playersName;
-	size_t thisMatch, thisPlayer; // indexes found in for loops
+	size_t thisMatch = 0, thisPlayer; // indexes found in for loops
 	bool exitMenu = false;
 	do
 	{
@@ -1054,15 +1049,15 @@ void postMatch(vector<Player> &players,vector<Match> &matches, Display &display,
 			display.inputFriendlySquad();
 
 			getline(cin,friendly);
-			cin.ignore(100, '\n');
+			cin.clear();
 
 			display.inputOpponent();
 			getline(cin, opponent);
 			cin.clear();
 			
-			
+			//finds the index for the match by searching through vector<Matches> 
+			for(thisMatch = 0; thisMatch < matches.size(); thisMatch++) {if((matches[thisMatch].getSquadName() == friendly) && (matches[thisMatch].getOpponent() == opponent)){break;}}
 
-			logic.FindMatch(matches, friendly, opponent, thisMatch);
 			do
 			{
 				// adding WIN or LOSS to match screen
@@ -1071,7 +1066,7 @@ void postMatch(vector<Player> &players,vector<Match> &matches, Display &display,
 				display.winOrLoss();
 				cin >> winOrLoss;
 				cin.clear();
-				cin.ignore(100,'n');
+				
 				
 				switch (winOrLoss)
 				{
@@ -1097,7 +1092,8 @@ void postMatch(vector<Player> &players,vector<Match> &matches, Display &display,
 				}
 			} while (exitMenu == false);
 			
-
+			//save outcome to file
+			logic.saveMatches(matches);
 
 			break;
 		case 2: 
@@ -1110,13 +1106,13 @@ void postMatch(vector<Player> &players,vector<Match> &matches, Display &display,
 			display.inputNewPLayer();
 			cin.clear();
 			getline(cin,playersName);
-			//
-			cout << "You entered " << playersName << endl;
+			
+			
+			 // finds player in vector<Player>
+			for(thisPlayer = 0; thisPlayer < players.size(); thisPlayer++) {if(players[thisPlayer].getName() == playersName){break;}}
 			
 
-			logic.FindPlayer(players, thisPlayer, playersName);
-
-			cout << "this is the player " << players[thisPlayer].getName() << endl;
+			cout << "You entered " << players[thisPlayer].getName() << endl;
 
 			display.inputNewRating();
 
@@ -1134,8 +1130,9 @@ void postMatch(vector<Player> &players,vector<Match> &matches, Display &display,
 			cout << endl;
 			display.playerIsSet();
 			system("pause");
-			// request new rating
-			// add rating to vector and rating
+			
+			//save updated data to file
+			logic.savePlayers(players);
 
 			break;
 		
@@ -1286,25 +1283,31 @@ void loadMembers(vector<Player> &players, vector<Support> &teamSupport, vector<M
 				// Variables for Matches
 			   opponent, coach, analyst, tank, ADC, jungler, offlane, support, outcome, squadAvgRatingStr; 
 		
+		
 		ifstream fileInput;
 
 		// load player data
 		fileInput.open(playerCSV);
 		if(fileInput.is_open())
 		{
-	
+			
+			
+			
+			
 			while (fileInput) // pulls data from file using CSV
     	    {
-    	        getline(fileInput, fname, ',');	getline(fileInput, sname, ','); getline(fileInput, available, ','); getline(fileInput, expertise, ','); getline(fileInput, currentRating, ','); getline(fileInput, averageRating, ',');
+    	        
+				getline(fileInput, fname, ',');	getline(fileInput, sname, ','); getline(fileInput, available, ','); getline(fileInput, expertise, ','); getline(fileInput, currentRating, ','); getline(fileInput, averageRating, ',');
         	    getline(fileInput, rating1, ','); getline(fileInput, rating2, ','); getline(fileInput, rating3, ',');getline(fileInput, rating4, ','); getline(fileInput, rating5, '\n');
 
-            	
+            	if(fileInput.eof()) break;
+
 				Player playertemp(fname, sname, available, stof(rating1), stof(rating2), stof(rating3),stof(rating4), stof(rating5), expertise);
 				players.push_back(playertemp);
 				
-                if(fileInput.eof()) break;
+                
 			}
-			
+			fileInput.ignore(1000, '\n');// ignores the blank line in the file
 			
 		}
 		else
@@ -1329,12 +1332,15 @@ void loadMembers(vector<Player> &players, vector<Support> &teamSupport, vector<M
         	    getline(fileInput, expertise, ',');
 				getline(fileInput, phone, '\n');  
 
-				 
+				
+
 				Support supporttemp(fname, sname, available, phone, expertise);
 				teamSupport.push_back(supporttemp);
 				
 				if(fileInput.eof()) break;
-			}			
+				
+			}
+			fileInput.ignore(1000, '\n');// ignores the blank line in the file			
 		}
 		else
 		{
@@ -1347,7 +1353,7 @@ void loadMembers(vector<Player> &players, vector<Support> &teamSupport, vector<M
 
 		fileInput.open(matchesCSV);
 		
-		if(fileInput.is_open())
+		if (fileInput.is_open())
 		{
 			while (fileInput)
 			{
@@ -1372,7 +1378,8 @@ void loadMembers(vector<Player> &players, vector<Support> &teamSupport, vector<M
 				
 				if(fileInput.eof()) break;
 				
-			}			
+			}
+			fileInput.ignore(1000, '\n');// ignores the blank line in the file			
 		}
 		else
 		{
@@ -1430,7 +1437,7 @@ do
 
 		case 5:
 
-			displayPlayerData(Players,logic,display); //******Done****** change around logic and diplay in header
+			displayPlayerData(Players,logic,display); 
 			break;
 	
 		case 6: 
@@ -1443,6 +1450,7 @@ do
 
 		case 7:	
 			DisplayMatchData(matches,display,logic);
+			
 			break;
 		default:
 			break;
